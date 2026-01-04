@@ -1,0 +1,34 @@
+remove from AIW
+ "ewt"
+"buchweitz"
+"isGapSequence" 
+"type" 
+ "socle" 
+ "aperySet" 
+"findSemigroups" 
+"buchweitzCriterion" 
+ "weight" 
+"sums"
+"semigroupRing"
+"mu"
+"buchweitzSemigroups" 
+"gaps"
+"semigroup"
+"apery" 
+"syzFormat" 
+
+
+remove from NumSem (might need to make a separate package for this older pre-AIW material):
+
+"isSmoothableSemigroup"
+"getFlatFamily" 
+"flatteningRelations" 
+"makeUnfolding" 
+"findPoint" 
+"isARandomFiberSmooth" 
+"knownExample" 
+"heuristicSmoothness" 
+"def1"
+
+--might need to be saved separately
+"LabBookProtocol" 
