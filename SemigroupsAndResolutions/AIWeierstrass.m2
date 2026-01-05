@@ -9116,7 +9116,6 @@ degreeMatrices F
 I_*
 I_*_{0..3}
 J = ideal(I_*_{0..3})
-res J
 syzFormat J
-degreeMatrices J
-
+(res J).dd_2
+buchweitz 0
