@@ -9146,14 +9146,19 @@ LL = flatten for g from 13 to 30 list(
        { testNWfWithAllDegreeConditions L',semigroupGenus L'}
 ))
 netList LL
-openInOut "LLh45-15-30-15s"
-L0 << LLh45-15-30-15s;
+
+L = value get "LLh45-15-30-15s";
+goods = apply(L, ell -> ell_0);
+goods_0
+"good0"<<goods<<close;
+s = value get "good0"
+
+
 testNWfWithAllDegreeConditions {13,16, 20,23}
-viewHelp File
+
 ---
 LL = flatten for g from 13 to 30 list(
 L = {6,9,g,g+3};
-L = {7,51,53,83};
 for r from 0 to 10 list(
     L' = {L_0+2*r, L_1+3*r, L_2+4*r, L_3+5*r};
     if gcd L' !=1 then continue else
@@ -9163,3 +9168,22 @@ for r from 0 to 10 list(
 LLnot3 = select(LL, L -> last L %3 == 0)
 sort(LLnot3/last
 )
+
+needsPackage"AIWeierstrass"
+L = {11,14,18,21}
+LL = for r from 0 to 10 list(
+    L' = {L_0+3*r, L_1+4*r, L_2+5*r, L_3+6*r};
+    if gcd L' !=1 then continue else
+    { testNWfWithAllDegreeConditions L',semigroupGenus L'}
+    );
+netList LL
+
+needsPackage"AIWeierstrass"
+L = {14,17,21,24}
+LL = for r from 0 to 20 list(
+    L' = {L_0+4*r, L_1+5*r, L_2+6*r, L_3+7*r};
+    if gcd L' !=1 then continue else
+    { testNWfWithAllDegreeConditions L',semigroupGenus L'}
+    );
+netList LL
+
