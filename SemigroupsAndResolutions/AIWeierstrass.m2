@@ -2791,6 +2791,20 @@ restart
 needsPackage"AIWeierstrass"
 L = {7, 9, 38, 40}
 testNWfWithAllDegreeConditions L
+
+elapsedTime LL = flatten flatten flatten for a from 6 to 10 list(
+    for b from 2 to 11  list (
+	for c from 2 to 11 list (
+	    for d from 2 to 11 list {a, a+b, a+b+c, a+b+c+d})));
+#LL == 5000
+debug AIWeierstrass
+elapsedTime LLt = apply(LL, syzFormat); --31sec
+elapsedTime LLt = apply(LL, testNW); --31sec
+elapsedTime LLt = apply(LL, L -> testNWf L); --35sec
+elapsedTime LLt = apply(LL, testNWfWithAllDegreeConditions); --37 sec
+tally (LLt/last)
+LLtrue = select(LLt, last)
+LLtrue_0_0
 ///
 testNWfWithAllDegreeConditions=method(Options=>{AllDegreeConditions=>true})
 testNWfWithAllDegreeConditions(List):= o -> L -> (
@@ -9099,6 +9113,8 @@ pseudoFrobenius {6,9,g,g+3}
 semigroup L
 --PF {5,6,7} = 8,9
 ---
+
+
 restart
 needsPackage "AIWeierstrass"
 L = {3,4,5}
@@ -9111,6 +9127,7 @@ F.dd
 L = {6,9,13,16}
 I = semigroupIdeal L
 F = res I
+F.dd_2
 syzFormat F
 degreeMatrices F
 I_*
@@ -9119,3 +9136,30 @@ J = ideal(I_*_{0..3})
 syzFormat J
 (res J).dd_2
 buchweitz 0
+
+
+LL = flatten for g from 13 to 30 list(
+       L = {6,9,g,g+3};
+      for r from 0 to 10 list(
+      L' = {L_0+2*r, L_1+3*r, L_2+4*r, L_3+5*r};
+      if gcd L' !=1 then continue else
+       { testNWfWithAllDegreeConditions L',semigroupGenus L'}
+))
+netList LL
+openInOut "LLh45-15-30-15s"
+L0 << LLh45-15-30-15s;
+testNWfWithAllDegreeConditions {13,16, 20,23}
+viewHelp File
+---
+LL = flatten for g from 13 to 30 list(
+L = {6,9,g,g+3};
+L = {7,51,53,83};
+for r from 0 to 10 list(
+    L' = {L_0+2*r, L_1+3*r, L_2+4*r, L_3+5*r};
+    if gcd L' !=1 then continue else
+    { testNWfWithAllDegreeConditions L',semigroupGenus L'}
+    ));
+#LL
+LLnot3 = select(LL, L -> last L %3 == 0)
+sort(LLnot3/last
+)
