@@ -4,10 +4,17 @@ newPackage(
          Version => "0.1",
          Date => "January 7, 2026",
          Headline => "Weighted Independence Complex of Graph",
-         Authors => {{ Name => "Me", Email => "", HomePage => ""}},
+         Authors => {
+	     { Name => "Hoang Anh", Email => "hoanganh130199@gmail.com"},
+	     { Name => "Francesco Bisio", Email => "francescobisio99@gmail.com"},
+	     { Name => "Lieu Long Ho", Email => "lieulongho@gmail.com"},
+	     { Name => "Mansi Mittal", Email => "mishagupta12366@gmail.com"},
+	     { Name => "Claudiu Raicu", Email => "craicu@nd.edu"}
+	     },
          Keywords => {""},
          AuxiliaryFiles => false,
          DebuggingMode => false,
+	 HomePage => "macaulay2.com",	 
 	 PackageExports => {"Complexes", "Graphs"}
          )
 
@@ -65,7 +72,6 @@ homologyRanksGComplex (Graph,HashTable,Ring) := (G,w,K) -> (
 
      -* Documentation section *-
      beginDocumentation()
-     emacs
      doc ///
      Key
        WeightedGraphComplex
@@ -174,8 +180,10 @@ homologyRanksGComplex (Graph,HashTable,Ring) := (G,w,K) -> (
      check "WeightedGraphComplex"
 
      uninstallPackage "WeightedGraphComplex"
+
      restart
      prefixPath = {"~/Desktop"} | prefixPath
+
      installPackage "WeightedGraphComplex"
      viewHelp "WeightedGraphComplex"
 
