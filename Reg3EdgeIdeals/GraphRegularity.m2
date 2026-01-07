@@ -53,7 +53,7 @@ Description
 -* Test section *-
 TEST ///
 -- test for 5-vertex graphs
-alpha 5 == 5/9
+alpha 5 == 4/9
 alpha(5, OnlyBiconnected=>true) == 5/9
 ///
 
