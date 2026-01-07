@@ -8,6 +8,7 @@ newPackage(
 	     { Name => "Hoang Anh", Email => "hoanganh130199@gmail.com"},
 	     { Name => "Francesco Bisio", Email => "francescobisio99@gmail.com"},
 	     { Name => "Lieu Long Ho", Email => "lieulongho@gmail.com"},
+	     { Name => "Yisong Huang", Email => "huangyisong@amss.ac.cn"},
 	     { Name => "Mansi Mittal", Email => "mishagupta12366@gmail.com"},
 	     { Name => "Claudiu Raicu", Email => "craicu@nd.edu"}
 	     },
