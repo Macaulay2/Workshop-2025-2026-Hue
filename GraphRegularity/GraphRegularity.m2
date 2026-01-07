@@ -10,7 +10,7 @@ newPackage(
     DebuggingMode => false
     )
 
-export {"alpha", "Reg"}
+export {"alpha", "Reg", "isBiconnected"}
 -* Code section *-
 
 regularity Graph := o -> G -> regularity edgeIdeal G
@@ -35,7 +35,13 @@ alpha ZZ := o -> n -> (
     if not noReg then listOfGraphs = select(listOfGraphs, G -> regularity G == o.Reg);
     min apply(dual \ edgeIdeal \ listOfGraphs, JG -> alpha(JG, o))
     )
-    
+
+
+isBiconnected = method()
+isBiconnected Graph := G -> (
+    V := vertices G;
+    isConnected G and all(V, v -> isConnected inducedGraph(G, delete(v, vertices G)))
+    )
 
 -* Documentation section *-
 beginDocumentation()
@@ -51,11 +57,21 @@ Description
 ///
 
 -* Test section *-
+
 TEST ///
 -- test for 5-vertex graphs
-alpha 5 == 4/9
-alpha(5, OnlyBiconnected=>true) == 5/9
+assert(alpha 5 == 4/9)
+assert(alpha(5, OnlyBiconnected=>true) == 5/9)
 ///
+
+TEST ///
+-- test for biconnectivity
+R = QQ[x_0..x_2]
+assert(not isBiconnected graph ideal(x_0*x_1, x_1*x_2))
+assert(not isBiconnected graph ideal(x_0*x_1))
+assert(isBiconnected graph ideal(x_0*x_1, x_1*x_2, x_0*x_2))
+///
+
 
 end--
 
@@ -69,7 +85,17 @@ check "GraphRegularity"
 uninstallPackage "GraphRegularity"
 restart
 installPackage "GraphRegularity"
-viewHelp "GraphRegularity
+viewHelp "GraphRegularity"
+
+needsPackage "Nauty"
+R = QQ[x_0..x_9]
+grs = generateRandomGraphs(R, 100, .5);
+needsPackage "Graphs"
+# select(grs, G -> vertexConnectivity G > 1)
+
+isConnected G
+isConnected inducedGraph(G, {x_0, x_2})
+
 
 
 
