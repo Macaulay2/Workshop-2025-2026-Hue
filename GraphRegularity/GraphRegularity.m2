@@ -80,6 +80,11 @@ restart
 path = append(path, "./")
 needsPackage "GraphRegularity"
 check "GraphRegularity"
+R = QQ[x_0..x_8]
+grs = generateRandomGraphs(R, 100, .5);
+goodGraphs = select(grs, G -> isBiconnected G and regularity G == 3);
+min \\ alpha \ goodGraphs
+select(goodGraphs, G -> alpha G == 4/9)
 
 
 uninstallPackage "GraphRegularity"
@@ -88,14 +93,25 @@ installPackage "GraphRegularity"
 viewHelp "GraphRegularity"
 
 needsPackage "Nauty"
-R = QQ[x_0..x_9]
-grs = generateRandomGraphs(R, 100, .5);
-needsPackage "Graphs"
-# select(grs, G -> vertexConnectivity G > 1)
-
-isConnected G
-isConnected inducedGraph(G, {x_0, x_2})
-
+n = 9
+R = QQ[x_0..x_(n-1)]
+conjecturedMinimumAlpha = n -> (
+    local m;
+    if n%2 == 0 then (
+	m = sub(n/2, ZZ);
+	(m^2 - m)/(4*m^2 - 8*m + 4)
+	) else (
+	m = sub((n+1)/2, ZZ);
+	((m-1)/(2*m-3))^2
+	)
+    )
+elapsedTime grs = filterGraphs(removeIsomorphs generateRandomGraphs(R, 100000, .5), buildGraphFilter {"Connectivity" => 0, "NegateConnectivity" => true, "MinDegree" => 1});
+elapsedTime reg3Graphs = select(grs, G -> regularity G == 3);
+elapsedTime a0 = min \\ alpha \ reg3Graphs
+champions = select(reg3Graphs, G -> alpha G == a0);
+# champions
+regularity \ champions 
+netList champions
 
 
 
