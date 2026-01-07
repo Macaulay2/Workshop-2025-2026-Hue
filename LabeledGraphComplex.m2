@@ -2,9 +2,9 @@
 newPackage(
 "WeightedGraphComplex",
          Version => "0.1",
-         Date => "January 7, 2026",
+         Date => "January 8, 2026",
          Headline => "Weighted Independence Complex of Graph",
-         Authors => {{ Name => "Me", Email => "", HomePage => ""}},
+         Authors => {{ Name => "Ho", Email => "", HomePage => ""}},
          Keywords => {""},
          AuxiliaryFiles => false,
          DebuggingMode => false,
