@@ -154,8 +154,8 @@ homologyRanksGComplex (Graph,HashTable,ZZ) := (G,w,p) -> (
        K:Ring
          a field over which the complex is computed
      Outputs
-       :Complex
-         weighted independence complex of the graph G
+       :HashTable
+        which records the rank of each homology module
      Description
        Text
          We compute the ranks for a 4-cycle graph with all vertices having weight 1.
@@ -174,7 +174,7 @@ homologyRanksGComplex (Graph,HashTable,ZZ) := (G,w,p) -> (
 	 netList L
      ///
      
-     -* Test section *-
+     -* Test section *- --binom(10,4) = 210
      TEST /// -* homology ranks 2 vertices, 1 edge *-
 	G = graph{{a,b}}
 	w = new HashTable from {a => 4, b => 6}
