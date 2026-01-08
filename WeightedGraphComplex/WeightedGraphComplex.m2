@@ -174,12 +174,16 @@ homologyRanksGComplex (Graph,HashTable,ZZ) := (G,w,p) -> (
 	 netList L
      ///
      
-     
-     end
      -* Test section *-
-     TEST /// -* [insert short title for this test] *-
-     -- test code and assertions here
-     -- may have as many TEST sections as needed
+     TEST /// -* homology ranks 2 vertices, 1 edge *-
+	G = graph{{a,b}}
+	w = new HashTable from {a => 4, b => 6}
+	H7 = homologyRanksGComplex(G,w,7)
+	assert(H7#0 == 1)
+	assert(H7#1 == 1)
+	H11 = homologyRanksGComplex(G,w,11)
+	assert(H11#0 == 0)
+	assert(H11#1 == 0)
      ///
 
      end--
@@ -188,6 +192,16 @@ homologyRanksGComplex (Graph,HashTable,ZZ) := (G,w,p) -> (
      restart
 
      debug needsPackage "WeightedGraphComplex"
+
+     p = 2;
+     for d from 2 to 10 list {toString(d) | " vertices"} | (
+	 G := pathGraph d;
+	 w := new HashTable from apply(vertexSet G, v -> v => 1);
+	 H := homologyRanksGComplex(G,w,p);
+	 for i from 0 to d-1 list if H#?i then H#i
+	 )
+     netList oo
+     
      check "WeightedGraphComplex"
 
      uninstallPackage "WeightedGraphComplex"
@@ -195,6 +209,8 @@ homologyRanksGComplex (Graph,HashTable,ZZ) := (G,w,p) -> (
      restart
      --prefixPath = {"~/Desktop"} | prefixPath
      installPackage "WeightedGraphComplex"
+     check "WeightedGraphComplex"
      viewHelp "WeightedGraphComplex"
 
 
+    
