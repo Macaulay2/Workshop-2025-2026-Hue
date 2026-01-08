@@ -1,0 +1,366 @@
+# %% [markdown]
+# # Question 1
+
+# %%
+needsPackage "SimplicialComplexes"
+needsPackage "MonomialOrbits"
+
+# %%
+K=ZZ/ nextPrime 200
+R=K[a..f]
+I= ideal "ab,bc,cd,da"
+regularity I
+
+# %%
+I= ideal "abc"
+L= orbitRepresentatives (R ,(2 ,2 ,2 ,2) , MonomialType => "SquareFree")
+
+# %%
+netList apply (L, I-> regularity I)
+
+# %% [markdown]
+# # Question 2
+
+# %% [markdown]
+# ## Min of Alpha on subclass of graphs
+
+# %%
+restart
+needsPackage "Nauty"
+
+# %%
+n = 5
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_min", L#(minPosition apply(L, x -> x#0))#0}, 
+    {"alpha_min and parameters as n_edges, init_deg_J, c", L#(minPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 6
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_min", L#(minPosition apply(L, x -> x#0))#0}, 
+    {"alpha_min and parameters as n_edges, init_deg_J, c", L#(minPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 7
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_min", L#(minPosition apply(L, x -> x#0))#0}, 
+    {"alpha_min and parameters as n_edges, init_deg_J, c", L#(minPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 8
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, 1, n + 2, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_min", L#(minPosition apply(L, x -> x#0))#0}, 
+    {"alpha_min and parameters as n_edges, init_deg_J, c", L#(minPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 9
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, 1, n, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_min", L#(minPosition apply(L, x -> x#0))#0}, 
+    {"alpha_min and parameters as n_edges, init_deg_J, c", L#(minPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %% [markdown]
+# ## Max of Alpha on subclass of graphs
+
+# %%
+restart
+needsPackage "Nauty"
+
+# %%
+n = 5
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, 1, 2*n, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_max", L#(maxPosition apply(L, x -> x#0))#0}, 
+    {"alpha_max and parameters as n_edges, init_deg_J, c", L#(maxPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 6
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, 1, 2*n, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_max", L#(maxPosition apply(L, x -> x#0))#0}, 
+    {"alpha_max and parameters as n_edges, init_deg_J, c", L#(maxPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 7
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, 1, 2*n, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_max", L#(maxPosition apply(L, x -> x#0))#0}, 
+    {"alpha_max and parameters as n_edges, init_deg_J, c", L#(maxPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 8
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, 1, n + 2, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_max", L#(maxPosition apply(L, x -> x#0))#0}, 
+    {"alpha_max and parameters as n_edges, init_deg_J, c", L#(maxPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 9
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, 1, n, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_max", L#(maxPosition apply(L, x -> x#0))#0}, 
+    {"alpha_max and parameters as n_edges, init_deg_J, c", L#(maxPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
+
+# %%
+n = 10
+R = QQ[x_0..x_(n-1)];
+
+makeEdgeIdeal = G -> sub(ideal \\ product \ edges G, R)
+makeAlexanderDual = G -> ideal \\ dual \\ simplicialComplex \\ ideal \\ product \ edges G
+
+-- we checked that it is faster than computing intersection of ideal(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+
+-- omit complete and empty graphs
+listOfGraphs = drop(generateGraphs(R, 1, n - 2, OnlyBiconnected=>false), -1);
+-- elapsedTime listOfGraphs = drop(drop(generateGraphs(R), -1),1);
+
+P = partition(G -> (reg makeEdgeIdeal G == 3), listOfGraphs);
+
+L = apply(P#true, G -> (
+    JG := makeAlexanderDual G;
+    c := codim JG;
+    iJ := initialDegree JG;
+    {(length edges G)/iJ^c, length edges G, iJ, c}
+    )
+)
+
+results = netList {
+    {"alpha_max", L#(maxPosition apply(L, x -> x#0))#0}, 
+    {"alpha_max and parameters as n_edges, init_deg_J, c", L#(maxPosition apply(L, x -> x#0))}, 
+    {"list of alphas and their parameters", L}}
