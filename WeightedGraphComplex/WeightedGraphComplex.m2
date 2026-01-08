@@ -61,8 +61,6 @@ makeGComplex (Graph,HashTable,List) := (G,w,ringEls) -> (
 makeGComplex (Graph,HashTable,Ring) := (G,w,R) -> makeGComplex(G,w,splice{#(edges G):1_R})
 
 
-
-
 homologyRanksGComplex = method()
 homologyRanksGComplex (Graph,HashTable,Ring) := (G,w,K) -> (
     C := makeGComplex(G,w,K);
@@ -70,8 +68,12 @@ homologyRanksGComplex (Graph,HashTable,Ring) := (G,w,K) -> (
     new HashTable from for i from a to b list i => rank HH_i C
     )
 
+homologyRanksGComplex (Graph,HashTable,ZZ) := (G,w,p) -> (
+    K := if p == 0 then QQ else ZZ/p;
+    homologyRanksGComplex(G,w,K)
+    )
 
-     -* Documentation section *-
+-* Documentation section *-
      beginDocumentation()
      doc ///
      Key
@@ -162,6 +164,14 @@ homologyRanksGComplex (Graph,HashTable,Ring) := (G,w,K) -> (
 	 w = new HashTable from {a => 1, b => 1, c => 1, d => 1}
 	 L = for K in {QQ,ZZ/2,ZZ/3,ZZ/5,ZZ/7,ZZ/11} list {K, homologyRanksGComplex(G,w,K)};
 	 netList L
+       Text
+         The ranks of homology groups only depend on the prime characteristic. If the user
+	 inputs the prime characteristic, then the filed K is taken to be the corresponding prime field.
+       Example
+         G = completeMultipartiteGraph {2,3}
+	 w = new HashTable from apply(vertexSet G, v -> v => 1)
+	 L = for p in {0,2,3,5,7,11} list {p, homologyRanksGComplex(G,w,p)};
+	 netList L
      ///
      
      
@@ -183,8 +193,7 @@ homologyRanksGComplex (Graph,HashTable,Ring) := (G,w,K) -> (
      uninstallPackage "WeightedGraphComplex"
 
      restart
-     prefixPath = {"~/Desktop"} | prefixPath
-
+     --prefixPath = {"~/Desktop"} | prefixPath
      installPackage "WeightedGraphComplex"
      viewHelp "WeightedGraphComplex"
 
