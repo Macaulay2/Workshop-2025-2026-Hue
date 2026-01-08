@@ -1,8 +1,26 @@
+-- using Nauty package
 restart
+-- load Package "Visualize" BEFORE Nauty
 needsPackage "Visualize"
-viewHelp Visualize
-G = graph({{0,1},{0,3},{0,4},{1,3},{2,3}},Singletons => {5})
+needsPackage "Nauty"
+R = QQ[a..f];
+E = {{a,b},{b,c},{c,f},{d,a},{e,c},{b,d}}
+G = graph(R, E)
+copyG = Graphs$graph edges G
 openPort "8888"
-visualize G
--- goal: get this working with Nauty
+visualize copyG
+
+-- using GraphRegularity package
+restart
+path = append(path, "../GraphRegularity/")
+-- load Package "Visualize" BEFORE GraphRegularity
+needsPackage "Visualize"
+needsPackage "GraphRegularity"
+R = QQ[a..f];
+E = {{a,b},{b,c},{c,f},{d,a},{e,c},{b,d}}
+G = graph(R, E)
+copyG = Graphs$graph edges G
+openPort "8888"
+visualize copyG
+
 
