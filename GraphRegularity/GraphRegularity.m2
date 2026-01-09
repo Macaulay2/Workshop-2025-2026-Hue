@@ -179,4 +179,256 @@ elapsedTime apply(P#true, G -> (
     )
 min oo
 
+-- Question about the ratio of degree and (initial degree)^(codimension)
+
+-- 1. Introduction to the question
+-* 
+Given a hypergraph G, let I be the edge ideal in S = QQ[x_1..x_n] of G.
+Let J be the ideal of "Alexander dual" of Stanley-Reisner complex of I(G).
+
+Fact: If S/J is Cohen-Macaulay, then i(J)^(e) ≤ (e!)d where d = degree(S/I) and e = codim(I). 
+
+Here, if G is a graph (without isolated vertex), then for J,
+    1. codim(J) = 2
+    2. degree(S/J) = |E(G)|
+    3. i(J) = minimum of size of vertex cover of G.
+
+Question: Suppose G is a graph such that reg(I(G)) ≤ 3. 
+Then can we find a constant c for this class of graphs such that ci(J)^e ≤ d?  
+*-
+
+-- Presets
+needsPackage "Visualize"
+needsPackage "Nauty"
+needsPackage "EdgeIdeals"
+
+-- Codes
+makeDualIdeal = G -> dual \\ edgeIdeal G
+-- We checked that it is faster than taking intersection of ideals(x_i,x_j)
+initialDegree = I -> min \\ first \ degree \ I_*
+reg = I -> regularity I
+alphaValue = G -> (
+       JG := makeDualIdeal G;
+       (length edges G)/((initialDegree JG)^(codim JG))
+)
+
+-- Experiments
+n = 8;
+R = QQ[x_0..x_(n-1)];
+elapsedTime ListOfGraphs = generateGraphs(R,MinDegree =>1);
+       -- We exclude graphs with isolated vertices.
+elapsedTime P = partition(G -> (reg edgeIdeal G == 3), ListOfGraphs);
+       -- We restrict graphs whose edge ideal has regularity 3.
+length(P#true), length(P#false)
+       -- P#true is the list of graphs having regularity 3.
+
+AlphaMin = min \\ alphaValue \ (P#true)
+ConjecturedAlphaMinVal = if n%2 == 0 then (n^2-2*n)/(4*(n-2)^2) else (n//2)^2/(n-2)^2
+AlphaMin == ConjecturedAlphaMinVal
+
+ConjecturedAlphaMinGraph = alphaValue graph(edges completeGraph((gens R)_{0..(n+1)//2-1})| edges completeGraph((gens R)_{-n//2..-1}))
+ConjecturedAlphaMinGraph == ConjecturedAlphaMinVal -- true means it is same!
+
+GraphAlphaMin = select(P#true, G -> (alphaValue G == AlphaMin))
+
+printWidth = 1000
+netList for i from 4 to 7 list(
+       R := QQ[x_0..x_(i-1)];
+       ListOfGraphs := generateGraphs(R,MinDegree =>1);
+       P := partition(G -> (reg edgeIdeal G == 3), ListOfGraphs);
+       AlphaMin := min \\ alphaValue \ (P#true);
+       GraphAlphaMin := select(P#true, G -> (alphaValue G == AlphaMin));
+       (AlphaMin, GraphAlphaMin, length(P#true))
+)
+
+
+-- One may be interested in maximum of alpha value.
+AlphaMax = max \\ alphaValue \ (P#true)
+graphAlpha2 = select(P#true, G -> (alphaValue G == AlphaMax))
+
+-- Experiment for higher dimension
+n = 10;
+R = QQ[x_0..x_(n-1)];
+elapsedTime ListOfGraphs = generateRandomGraphs(R, 1000);
+       -- We exclude graphs with isolated vertices.
+FilteredListOfGraphs = removeIsomorphs(filterGraphs(ListOfGraphs,{"MinDegree"=>1}));
+elapsedTime P = partition(G -> (reg edgeIdeal G == 3), FilteredListOfGraphs);
+       -- We restrict graphs whose edge ideal has regularity 3.
+length(P#true), length(P#false)
+       -- P#true is the list of graphs having regularity 3.
+
+AlphaMin = min \\ alphaValue \ (P#true)
+ConjecturedAlphaMin = alphaValue graph(edges completeGraph((gens R)_{0..(n+1)//2-1})| edges completeGraph((gens R)_{-n//2..-1}))
+-- ConjecturedAlphaMinVal = if n%2 == 0 then (n^2-2*n)/(4*(n-2)^2) else (n//2)^2/(n-2)^2  
+ConjecturedAlphaMin < AlphaMin -- "true" if the conjecture holds
+
+for i from 0 to 100 do (
+       ListOfGraphs := generateRandomGraphs(R, 1000);
+       FilteredListOfGraphs := removeIsomorphs(filterGraphs(ListOfGraphs,{"MinDegree"=>1}));
+       P := partition(G -> (reg edgeIdeal G == 3), FilteredListOfGraphs);
+       AlphaMin := min \\ alphaValue \ (P#true);
+       print (length(P#true), ConjecturedAlphaMin < AlphaMin)
+)
+
+
+-- (Extra) What happen if we add some conditions on graphs?
+-- If we add "Biconnected" condition on graphs, then the followings are graphs having minimum alpha value
+-- cycles when |V(G)| is odd.
+d = 5;
+R = QQ[x_0..x_(d-1)];
+G = graph apply(numgens R, i-> {x_i,x_((i+1)%d)})
+J = dual \\ monomialIdeal \\ product \ edges G
+iniDegJ = initialDegree J
+betti res J
+
+-- two simplices connected by two edges when |V(G)| is even.
+m = 5; -- size of each component, |V(G)| = 2m
+R = QQ[x_0..x_(m-1),y_0..y_(m-1)];
+G = graph (subsets(toList(x_0..x_(m-1)),2)|subsets(toList(y_0..y_(m-1)),2)|apply(2,i->{x_i,y_i}))
+J = dual \\ monomialIdeal \\ product \ edges G
+betti res J
+codim J +1 == pdim ((ring J)^1/J) -- it is almost Cohen-Macaulay.
+
+-* 
+Experiments
+6 vertices, biconnected, regularity = 3: o129 = 1/2 = 7/14
+7 vertices, biconnected, regularity = 3: o122 = 7/16
+8 vertices, biconnected ,regularity = 3: o107 = 7/18
+*-
+
+
+-- InitialDegree vs degree for rational curves in PP^3
+restart
+R = ZZ/101[s, t];
+S = ZZ/101[x_0..x_3];
+netList for a from 3 to 15 list(
+f = s^a*t^a*(s+t)^a*(s-t)^a;
+F = map(R, S, {s^(4*a+1), t^(4*a+1), s*f, t*f});
+I = kernel F;
+m = min \\ first \ degree \ (trim I)_*;
+(degree I, regularity I, m, sub((degree I)/m^2, RR))
+)
+
+-*
+--------------------+
+o3 = |(13, 8, 6, .361111)  |
+     +---------------------+
+     |(17, 10, 7, .346939) |
+     +---------------------+
+     |(21, 12, 8, .328125) |
+     +---------------------+
+     |(25, 16, 8, .390625) |
+     +---------------------+
+     |(29, 18, 9, .358025) |
+     +---------------------+
+     |(33, 20, 10, .33)    |
+     +---------------------+
+     |(37, 22, 11, .305785)|
+     +---------------------+
+     |(41, 24, 11, .338843)|
+     +---------------------+
+     |(45, 26, 12, .3125)  |
+     +---------------------+
+     |(49, 28, 13, .289941)|
+     +---------------------+
+     |(53, 30, 13, .313609)|
+     +---------------------+
+     |(57, 32, 14, .290816)|
+     +---------------------+
+     |(61, 36, 14, .311224)|
+     +---------------------+
+*-
+
+sub(1/6, RR) -- Expected value for general curves from theory
+
+---------------------------------------------------------
+a=15
+
+loadPackage "MultigradedImplicitization"
+componentsOfKernel(3, F)
+describe oo
+
+I = kernel(F, SubringLimit => );
+codim ideal leadTerm gens I
+decompose I
+betti I
+
+----------------------------------------------------------
+restart
+R = ZZ/101[s, t];
+S = ZZ/101[x_0..x_3];
+K = ideal vars R
+netList for d from 10 to 40 list(
+I = ker map (R, S, random(toList(4:d),K));
+m = min \\ first \ degree \ (trim I)_*;
+(degree I, regularity I, m, sub((degree I)/m^2, RR))
+)
+
+d=10
+
+-*
+ +---------------------+
+o4 = |(10, 6, 5, .4)       |
+     +---------------------+
+     |(11, 6, 6, .305556)  |
+     +---------------------+
+     |(12, 7, 6, .333333)  |
+     +---------------------+
+     |(13, 7, 6, .361111)  |
+     +---------------------+
+     |(14, 8, 7, .285714)  |
+     +---------------------+
+     |(15, 8, 7, .306122)  |
+     +---------------------+
+     |(16, 8, 7, .326531)  |
+     +---------------------+
+     |(17, 8, 8, .265625)  |
+     +---------------------+
+     |(18, 9, 8, .28125)   |
+     +---------------------+
+     |(19, 9, 8, .296875)  |
+     +---------------------+
+     |(20, 9, 8, .3125)    |
+     +---------------------+
+     |(21, 10, 9, .259259) |
+     +---------------------+
+     |(22, 10, 9, .271605) |
+     +---------------------+
+     |(23, 10, 9, .283951) |
+     +---------------------+
+     |(24, 10, 9, .296296) |
+     +---------------------+
+     |(25, 11, 10, .25)    |
+     +---------------------+
+     |(26, 11, 10, .26)    |
+     +---------------------+
+     |(27, 11, 10, .27)    |
+     +---------------------+
+     |(28, 11, 10, .28)    |
+     +---------------------+
+     |(29, 12, 11, .239669)|
+     +---------------------+
+     |(30, 12, 11, .247934)|
+     +---------------------+
+     |(31, 12, 11, .256198)|
+     +---------------------+
+     |(32, 12, 11, .264463)|
+     +---------------------+
+     |(33, 12, 12, .229167)|
+     +---------------------+
+     |(34, 13, 12, .236111)|
+     +---------------------+
+     |(35, 13, 12, .243056)|
+     +---------------------+
+     |(36, 13, 12, .25)    |
+     +---------------------+
+     |(37, 13, 12, .256944)|
+     +---------------------+
+     |(38, 14, 13, .224852)|
+     +---------------------+
+     |(39, 14, 13, .230769)|
+     +---------------------+
+     |(40, 14, 13, .236686)|
+     +---------------------+
+*-
 
